@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>JURAGANMUDA — Dashboard</title>
+<style>
+:root{--bg:#090815;--panel:#141128;--panel2:#1a1d33;--border:#302354;--orange:#f05a08;--muted:#85869b;--text:#f7f7fb;--green:#35d17b;--blue:#5ca8ff;--red:#ff737b;--yellow:#ffd21f;--purple:#b05cff}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:16px/1.45 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+.auth-wrap{max-width:650px;margin:0 auto;padding:42px 18px 54px;min-height:100vh;display:flex;flex-direction:column;justify-content:center}
+.auth-brand{text-align:center;font-size:clamp(28px,7vw,46px);font-weight:950;letter-spacing:clamp(3px,1vw,8px);margin:12px 0 8px;text-shadow:0 0 24px #f05a0833}
+.auth-sub{text-align:center;color:#85869b;letter-spacing:2px;margin:10px 0 30px}
+.auth-rates{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:28px}
+.rate-tile{text-align:center;padding:15px 8px;border-radius:15px;font-weight:800;background:#10251f;border:1px solid #17683e;color:var(--green)}
+.rate-tile.purple-tile{background:#211333;border-color:#7130a0;color:#c17aff}
+.auth-card{background:var(--panel);border:1px solid var(--border);border-radius:22px;padding:24px}
+.auth-card label{display:block;font-size:15px;font-weight:650;margin-top:10px}
+.auth-card input,.auth-card select{padding:15px;background:#211a3e;border:1px solid #42316e;border-radius:14px;font-size:16px}
+.auth-submit{width:100%;margin-top:18px;padding:15px;font-size:18px}
+.auth-switch{text-align:center;color:var(--muted);margin:20px 0 0}.auth-switch button{padding:0;background:none;color:var(--orange);font-size:inherit}
+.payment-box{border:1px solid var(--border);border-radius:17px;padding:16px;margin-top:14px}
+.verify-row{display:flex;align-items:center;gap:10px;background:#24252a;border:1px solid #777;border-radius:5px;padding:14px;margin-top:18px;color:#ddd}
+.verify-row input{width:20px;height:20px;margin:0}
+.auth-message{font-size:14px;color:#ffcf9c;margin-top:12px}
+@media(max-width:420px){.auth-card{padding:18px}.auth-wrap{padding:28px 14px}.auth-brand{letter-spacing:3px}}
+header{position:sticky;top:0;z-index:5;background:#151129;border-bottom:1px solid var(--border);padding:16px max(18px,calc((100% - 1100px)/2));display:flex;justify-content:space-between;align-items:center;gap:12px}
+.brand{font-size:22px;font-weight:900;letter-spacing:1px;color:#ffe4b5}.brand span{color:var(--orange)}button,.tab{border:0;border-radius:12px;padding:12px 16px;font-weight:700;cursor:pointer;font-size:15px}.logout{background:#2a2058;color:#ddd3ff}
+main{max-width:1100px;margin:auto;padding:20px 18px 50px}.tabs{display:flex;gap:8px;overflow:auto;padding:4px 0 14px;margin-bottom:16px;border-bottom:1px solid var(--border)}.tab{white-space:nowrap;background:transparent;color:#a8a8ba}.tab.active,.primary{background:var(--orange);color:white}
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin:20px 0}.filter{background:#21183f;color:#aaa5c0}.filter.active{background:var(--orange);color:#fff}
+.stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.card{background:var(--panel);border:1px solid var(--border);border-radius:22px;padding:22px}.stat{text-align:center;min-height:130px;display:flex;flex-direction:column;justify-content:center}.num{font-size:38px;font-weight:850}.blue{color:var(--blue)}.green{color:var(--green)}.red{color:var(--red)}.yellow{color:var(--yellow)}.purple{color:var(--purple)}.muted{color:var(--muted)}.section-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:28px 0 14px}.rate{display:inline-flex;gap:8px;align-items:center;border:1px solid #17683e;background:#10291f;color:var(--green);border-radius:13px;padding:12px 15px;font-weight:800}.box-empty{text-align:center;padding:36px 18px;color:var(--muted);line-height:1.8}.wallet{margin-top:20px}.wallet-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:18px}.wallet-item{background:var(--panel2);padding:16px;border-radius:14px}.wallet-item strong{display:block;font-size:25px;margin-top:5px}.hidden{display:none!important}
+.table-wrap{overflow:auto;margin-top:15px}table{width:100%;border-collapse:collapse;min-width:600px}th,td{text-align:left;padding:14px 10px;border-bottom:1px solid #28233f}th{color:var(--muted)}.panel-title{font-size:22px;font-weight:800;margin:0 0 12px}
+input,select,textarea{width:100%;background:#0f0d20;color:white;border:1px solid var(--border);border-radius:10px;padding:12px;font:inherit;margin:6px 0 12px}label{font-size:14px;color:#c1bfd0}.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.notice{background:#211a37;border:1px solid var(--border);padding:13px;border-radius:12px;color:#c4bfd8;font-size:14px}.danger{color:#ffb6b6}.secondary{background:#292044;color:#e3d9ff}.about{position:fixed;right:18px;bottom:18px;z-index:4;border-radius:30px;box-shadow:0 8px 25px #0007}
+@media(min-width:760px){.stats{grid-template-columns:repeat(4,minmax(0,1fr))}.stat{min-height:150px}}
+@media(max-width:600px){header{padding:14px 16px}.brand{font-size:19px}main{padding:14px 14px 40px}.card{padding:17px}.num{font-size:32px}.wallet-grid,.form-grid{grid-template-columns:1fr}.section-head h2{font-size:21px}}
+</style>
+</head>
+<body>
+<section id="authScreen" class="auth-wrap">
+  <div class="auth-brand">⚡ JURAGAN<span>MUDA</span></div>
+  <div id="authHeading" style="text-align:center;font-size:20px;font-weight:750">Masuk ke Akun Anda</div>
+  <div class="auth-sub" id="authSub">MASUK KE AKUN ANDA</div>
+  <div class="auth-rates">
+    <div class="rate-tile"><div style="font-size:27px">Rp2.000</div><div style="font-weight:500">per chat</div></div>
+    <div class="rate-tile purple-tile"><div style="font-size:27px">Rp50</div><div style="font-weight:500">bonus referral*</div></div>
+  </div>
+  <form id="loginForm" class="auth-card">
+    <label for="loginUser">Username</label><input id="loginUser" autocomplete="username" placeholder="username" required>
+    <label for="loginPass">Password</label><input id="loginPass" type="password" autocomplete="current-password" placeholder="Password" required>
+    <div class="verify-row"><input type="checkbox" id="loginVerify"><span>Saya bukan robot <span style="color:#85869b;font-size:12px">· verifikasi demo</span></span></div>
+    <button class="primary auth-submit" type="submit">Masuk</button>
+    <p class="auth-switch">Belum punya akun? <button type="button" id="showRegister">Daftar</button></p>
+    <p class="auth-message">Mode pratinjau: login belum tersambung ke server dan tidak memverifikasi akun sungguhan.</p>
+  </form>
+  <form id="registerForm" class="auth-card hidden">
+    <label for="regUser">Username</label><input id="regUser" autocomplete="username" placeholder="username" required>
+    <label for="regEmail">Email</label><input id="regEmail" type="email" autocomplete="email" placeholder="email@contoh.com" required>
+    <label for="regPass">Password</label><input id="regPass" type="password" minlength="8" autocomplete="new-password" placeholder="Minimal 8 karakter" required>
+    <label for="regPhone">No. HP</label><input id="regPhone" type="tel" autocomplete="tel" placeholder="628xxxxxxxxx" required>
+    <div class="payment-box">
+      <strong>Akun Pembayaran</strong> <span class="muted">(opsional — bisa ditambah nanti)</span>
+      <label for="regBank">Jenis Bank / E-Wallet</label>
+      <select id="regBank"><option value="">-- Pilih (opsional) --</option><option>DANA</option><option>OVO</option><option>GoPay</option><option>ShopeePay</option><option>Bank BCA</option><option>Bank BRI</option><option>Bank BNI</option><option>Bank Mandiri</option><option>Lainnya</option></select>
+      <label for="regAccount">No. Rekening / Akun</label><input id="regAccount" inputmode="numeric" placeholder="Nomor rekening (opsional)">
+      <label for="regOwner">Nama Pemilik Akun</label><input id="regOwner" placeholder="Nama sesuai rekening (opsional)">
+    </div>
+    <label for="regReferral">Kode Referral (opsional)</label><input id="regReferral" placeholder="KODE REFERRAL TEMAN">
+    <div class="verify-row"><input type="checkbox" id="regVerify"><span>Saya bukan robot <span style="color:#85869b;font-size:12px">· verifikasi demo</span></span></div>
+    <button class="primary auth-submit" type="submit">Daftar Sekarang</button>
+    <p class="auth-switch">Sudah punya akun? <button type="button" id="showLogin">Masuk</button></p>
+    <p class="auth-message">Form ini hanya pratinjau. Jangan masukkan password atau detail rekening asli; pendaftaran belum disimpan.</p>
+  </form>
+  <p style="text-align:center;color:#77768a;font-size:12px;margin-top:18px">*Bonus referral dan rate adalah contoh tampilan, belum menjadi janji pembayaran.</p>
+  <p style="text-align:center;margin-top:8px"><button type="button" id="previewDashboard" class="secondary">Lihat dashboard demo</button></p>
+</section>
+<div id="appShell" class="hidden">
+<header><div class="brand">⚡ JURAGAN<span>MUDA</span></div><button class="logout" id="logoutBtn">Keluar</button></header>
+<main>
+  <nav class="tabs" aria-label="Menu utama">
+    <button class="tab active" data-page="sesi">Sesi Login</button>
+    <button class="tab" data-page="penghasilan">Penghasilan</button>
+    <button class="tab" data-page="riwayat">Riwayat</button>
+    <button class="tab" data-page="turnamen">Turnamen</button>
+    <button class="tab" data-page="admin">Pengelola</button>
+  </nav>
+  <div class="filters" id="filters">
+    <button class="filter active" data-period="Hari Ini">Hari Ini</button><button class="filter" data-period="7 Hari">7 Hari</button><button class="filter" data-period="30 Hari">30 Hari</button><button class="filter" data-period="Custom">Custom</button>
+  </div>
+  <section class="stats">
+    <div class="card stat"><div class="num blue" id="sent">0</div><div class="muted">Terkirim</div></div>
+    <div class="card stat"><div class="num green" id="delivered">0</div><div class="muted">Delivered</div></div>
+    <div class="card stat"><div class="num red" id="failed">0</div><div class="muted">Gagal</div></div>
+    <div class="card stat"><div class="num yellow" id="income">Rp0</div><div class="muted">Penghasilan</div></div>
+  </section>
+  <section id="page-sesi">
+    <div class="section-head"><h2>Sesi Aktif (<span id="sessionCount">0</span>/5)</h2><button class="primary" id="newSession">+ Mulai Sesi Baru</button></div>
+    <div class="rate">💰 Rate per chat: Rp2.000</div>
+    <div class="notice" style="margin-top:14px">Ajukan nomor untuk ditinjau pengelola. Demi keamanan, jangan masukkan atau membagikan OTP, PIN, kode tautan perangkat, maupun kode login WhatsApp ke website ini.</div>
+    <div class="card hidden" id="sessionForm" style="margin-top:16px">
+      <h3 class="panel-title">Ajukan Tautan WhatsApp</h3>
+      <label for="waNumber">Nomor WhatsApp (format internasional)</label>
+      <input id="waNumber" type="tel" inputmode="tel" placeholder="Contoh: 62812xxxxxxx" autocomplete="tel">
+      <label for="sessionNote">Keterangan (opsional)</label>
+      <input id="sessionNote" type="text" maxlength="100" placeholder="Nama pemilik / keterangan">
+      <div class="notice">Permintaan akan berstatus <b>Menunggu persetujuan</b>. Jika disetujui, lanjutkan penautan langsung di aplikasi atau alur resmi WhatsApp. Jangan kirim OTP, PIN, atau kode penautan kepada admin.</div>
+      <div class="section-head" style="margin-bottom:0"><button class="secondary" id="cancelSession">Batal</button><button class="primary" id="submitSession">Kirim permintaan</button></div>
+      <p id="sessionMsg" class="muted" aria-live="polite"></p>
+    </div>
+    <div class="card box-empty" id="sessionEmpty" style="margin-top:18px">Belum ada permintaan sesi. Tekan “Mulai Sesi Baru” untuk mengajukan nomor WhatsApp.</div>
+    <div id="sessionList"></div>
+  </section>
+  <section id="page-penghasilan" class="hidden">
+    <div class="card wallet"><div class="section-head" style="margin-top:0"><h2>Dompet</h2><button class="primary" id="withdraw">Tarik Saldo</button></div><div class="muted">Penarikan harus diverifikasi oleh pengelola.</div>
+      <div class="wallet-grid"><div class="wallet-item"><span class="muted">Saldo Tersedia</span><strong class="green" id="balance">Rp0</strong></div><div class="wallet-item"><span class="muted">Total Penghasilan</span><strong id="totalIncome">Rp0</strong></div><div class="wallet-item"><span class="muted">Bonus Referral</span><strong class="purple" id="bonus">Rp0</strong></div></div>
+    </div>
+    <div class="notice" style="margin-top:14px">Rate saat ini: <b class="green">Rp2.000 per chat</b>. Angka pada dashboard ini merupakan data demo lokal, bukan saldo atau pembayaran sungguhan.</div>
+  </section>
+  <section id="page-riwayat" class="hidden"><div class="card"><h2 class="panel-title">Riwayat Nomor Digunakan</h2><p class="muted">Contoh struktur tabel riwayat untuk akun yang berizin.</p><div class="table-wrap"><table><thead><tr><th>Nomor (disamarkan)</th><th>Jumlah Chat</th><th>Total Rate</th><th>Waktu</th><th>Status</th></tr></thead><tbody id="historyRows"><tr><td colspan="5" class="muted">Belum ada riwayat.</td></tr></tbody></table></div></div></section>
+  <section id="page-turnamen" class="hidden"><div class="card"><h2 class="panel-title">Turnamen</h2><p class="muted">Papan peringkat demo.</p><div class="table-wrap"><table><thead><tr><th>Peringkat</th><th>Nama</th><th>Chat valid</th><th>Penghasilan demo</th></tr></thead><tbody><tr><td>—</td><td>Belum ada peserta</td><td>0</td><td>Rp0</td></tr></tbody></table></div></div></section>
+  <section id="page-admin" class="hidden">
+    <div class="card"><h2 class="panel-title">Panel Pengelola JURAGANMUDA</h2><p class="muted">Panel demo di perangkat ini. Jangan masukkan kata sandi atau token rahasia ke dalam file HTML publik.</p>
+      <div class="form-grid"><div><label for="siteTitle">Nama website</label><input id="siteTitle" value="JURAGANMUDA"></div><div><label for="chatRate">Rate per chat (Rp)</label><input id="chatRate" type="number" min="0" value="2000"></div></div>
+      <label for="announcement">Pengumuman dashboard</label><textarea id="announcement" rows="3" placeholder="Tulis pengumuman untuk pengguna..."></textarea>
+      <button class="primary" id="saveSettings">Simpan pengaturan demo</button>
+      <p id="saveMsg" class="muted" aria-live="polite"></p>
+      <hr style="border-color:var(--border);margin:22px 0">
+      <h3>Permintaan sesi WhatsApp</h3><p class="notice">Permintaan nomor yang dibuat pada demo akan muncul di daftar sesi. Tombol Setujui hanya mengubah status demo di browser ini—belum menautkan akun WhatsApp sungguhan. Untuk penautan nyata, gunakan WhatsApp Business Platform resmi dan jangan pernah meminta OTP/PIN/kode tautan pengguna.</p>
+      <div class="notice" style="margin-bottom:12px">Sebagai pengelola, kamu dapat menyetujui atau menolak permintaan. Pengguna menyelesaikan penautan sendiri melalui WhatsApp resmi; jangan meminta atau meneruskan OTP, PIN, maupun kode penautan.</div><div id="adminRequests" class="muted">Belum ada permintaan sesi.</div>
+      <h3 style="margin-top:22px">Integrasi pengiriman</h3><p class="notice">Agar pengelola benar-benar bisa mengelola akun, saldo, dan mengirim pesan, perlu backend, login admin yang aman, database, serta koneksi resmi WhatsApp Business Platform. Jangan gunakan untuk pesan massal tanpa izin penerima.</p>
+    </div>
+  </section>
+</main>
+<button class="primary about" id="aboutBtn">ⓘ Tentang Kami</button>
+</div>
+<script>
+const $=s=>document.querySelector(s), $$=s=>document.querySelectorAll(s);
+function setAuthMode(mode){
+ const isRegister=mode==='register';
+ $('#loginForm').classList.toggle('hidden',isRegister);
+ $('#registerForm').classList.toggle('hidden',!isRegister);
+ $('#authHeading').textContent=isRegister?'Daftar Akun':'Masuk ke Akun Anda';
+ $('#authSub').textContent=isRegister?'ISI SEMUA DATA DENGAN BENAR':'MASUK KE AKUN ANDA';
+}
+$('#previewDashboard').addEventListener('click',()=>{ $('#authScreen').classList.add('hidden');$('#appShell').classList.remove('hidden'); });
+$('#showRegister').addEventListener('click',()=>setAuthMode('register'));
+$('#showLogin').addEventListener('click',()=>setAuthMode('login'));
+$('#loginForm').addEventListener('submit',e=>{
+ e.preventDefault();
+ if(!$('#loginVerify').checked){alert('Centang verifikasi demo terlebih dahulu.');return;}
+ alert('Ini hanya pratinjau. Login belum terhubung ke server, sehingga akun tidak diverifikasi.');
+});
+$('#registerForm').addEventListener('submit',e=>{
+ e.preventDefault();
+ if(!$('#regVerify').checked){alert('Centang verifikasi demo terlebih dahulu.');return;}
+ alert('Pendaftaran demo saja — data tidak dikirim atau disimpan. Untuk akun sungguhan, backend dan keamanan perlu dipasang.');
+});
+let sessions=0, totalSent=0, totalDelivered=0, totalFailed=0, balance=0, income=0, rate=2000;
+let sessionRequests=[], requestId=0;
+function rupiah(n){return 'Rp'+Number(n).toLocaleString('id-ID')}
+function refresh(){
+  $('#sent').textContent=totalSent;$('#delivered').textContent=totalDelivered;$('#failed').textContent=totalFailed;
+  $('#income').textContent=rupiah(income);$('#balance').textContent=rupiah(balance);$('#totalIncome').textContent=rupiah(income);
+  $('#sessionCount').textContent=sessions;
+  const hasRequests=sessionRequests.length>0;
+  $('#sessionEmpty').classList.toggle('hidden',hasRequests);
+  $('#sessionList').innerHTML='';
+  sessionRequests.forEach(req=>{
+    const el=document.createElement('div');el.className='card';el.style.marginTop='14px';
+    const statusColor=req.status==='Disetujui'?'green':req.status==='Ditolak'?'red':'yellow';
+    el.innerHTML='<div class="section-head" style="margin:0"><div><b>Permintaan #'+req.id+'</b><div class="muted">'+escapeHtml(req.number)+' · '+escapeHtml(req.note||'Tanpa keterangan')+'</div><div class="'+statusColor+'" style="margin-top:7px;font-weight:800">Status: '+req.status+'</div></div><button class="secondary" data-remove="'+req.id+'">Hapus</button></div>';
+    if(req.status==='Disetujui'){
+      const next=document.createElement('p');next.className='notice';next.textContent='Disetujui. Lanjutkan penautan hanya melalui proses resmi WhatsApp di perangkat pemilik nomor. Kode rahasia tidak perlu dikirim ke admin.';el.appendChild(next);
+    }
+    el.querySelector('[data-remove]').addEventListener('click',()=>{sessionRequests=sessionRequests.filter(x=>x.id!==req.id);if(req.status==='Disetujui')sessions=Math.max(0,sessions-1);refresh();renderAdminRequests()});
+    $('#sessionList').appendChild(el);
+  });
+  renderAdminRequests();
+}
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function renderAdminRequests(){
+  const box=$('#adminRequests');box.innerHTML='';
+  if(!sessionRequests.length){box.textContent='Belum ada permintaan sesi.';return;}
+  sessionRequests.forEach(req=>{
+    const row=document.createElement('div');row.className='card';row.style.marginTop='10px';
+    row.innerHTML='<b>Permintaan #'+req.id+'</b><div class="muted">'+escapeHtml(req.number)+' · '+escapeHtml(req.note||'Tanpa keterangan')+'</div><p class="muted">Status permintaan: '+req.status+'</p>';
+    if(req.status==='Menunggu persetujuan'){
+      const approve=document.createElement('button');approve.className='primary';approve.textContent='Setujui demo';
+      approve.addEventListener('click',()=>{if(sessions>=5){alert('Batas demo adalah 5 sesi aktif.');return;}req.status='Disetujui';sessions++;refresh()});
+      const reject=document.createElement('button');reject.className='secondary';reject.style.marginLeft='8px';reject.textContent='Tolak';
+      reject.addEventListener('click',()=>{req.status='Ditolak';refresh()});
+      row.append(approve,reject);
+    } else if(req.status==='Disetujui') {
+      const note=document.createElement('div');note.className='notice';note.style.marginTop='10px';note.textContent='Permintaan disetujui. Pemilik nomor melanjutkan penautan sendiri melalui WhatsApp resmi.';row.appendChild(note);
+    }
+    box.appendChild(row);
+  });
+}
+$$('.tab').forEach(b=>b.addEventListener('click',()=>{$$('.tab').forEach(x=>x.classList.toggle('active',x===b));['sesi','penghasilan','riwayat','turnamen','admin'].forEach(p=>$('#page-'+p).classList.toggle('hidden',p!==b.dataset.page));$('#filters').classList.toggle('hidden',b.dataset.page==='admin'||b.dataset.page==='turnamen');}));
+$$('.filter').forEach(b=>b.addEventListener('click',()=>{$$('.filter').forEach(x=>x.classList.toggle('active',x===b));if(b.dataset.period==='Custom') alert('Demo: rentang tanggal khusus dapat ditambahkan pada versi backend.');}));
+$('#newSession').addEventListener('click',()=>{$('#sessionForm').classList.remove('hidden');$('#waNumber').focus();});
+$('#cancelSession').addEventListener('click',()=>{$('#sessionForm').classList.add('hidden');$('#sessionMsg').textContent='';});
+$('#submitSession').addEventListener('click',()=>{
+  const number=$('#waNumber').value.trim().replace(/[\s()+-]/g,'');
+  if(!/^\d{8,15}$/.test(number)){ $('#sessionMsg').textContent='Masukkan nomor dengan kode negara, angka saja (contoh format: 62812xxxxxxx).';return; }
+  if(sessionRequests.some(r=>r.number===number&&r.status==='Menunggu persetujuan')){$('#sessionMsg').textContent='Nomor ini sudah menunggu persetujuan.';return;}
+  sessionRequests.push({id:++requestId,number,note:$('#sessionNote').value.trim(),status:'Menunggu persetujuan'});
+  $('#waNumber').value='';$('#sessionNote').value='';$('#sessionForm').classList.add('hidden');$('#sessionMsg').textContent='Permintaan dikirim untuk ditinjau pengelola.';
+  refresh();
+});
+$('#withdraw').addEventListener('click',()=>alert('Permintaan penarikan demo: pada versi produksi, permintaan dikirim ke pengelola untuk diverifikasi.'));
+$('#saveSettings').addEventListener('click',()=>{const title=$('#siteTitle').value.trim()||'JURAGANMUDA';document.title=title+' — Dashboard';$('.brand').innerHTML='⚡ '+title.replace(/</g,'&lt;').replace(/>/g,'&gt;');rate=Math.max(0,Number($('#chatRate').value)||0);$('.rate').textContent='💰 Rate per chat: '+rupiah(rate);$('#saveMsg').textContent='Pengaturan demo tersimpan untuk tampilan saat ini.';});
+$('#aboutBtn').addEventListener('click',()=>alert('JURAGANMUDA — Dashboard pengelolaan. Rate demo: Rp2.000 per chat.'));
+$('#logoutBtn').addEventListener('click',()=>{ $('#appShell').classList.add('hidden');$('#authScreen').classList.remove('hidden');setAuthMode('login'); });
+refresh();
+</script>
+</body>
+</html>
